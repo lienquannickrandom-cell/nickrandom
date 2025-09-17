@@ -62,62 +62,78 @@
 
   <script>
     // ==== Thay bằng danh sách link thực tế của bạn ====
-const links = [
-  { url: "https://srtslug.biz/8fYS7", note: "Link 1" },
-  { url: "https://srtslug.biz/8fYSt", note: "Link 2" },
-  { url: "https://srtslug.biz/8fYTv", note: "Link 3" },
-  { url: "https://srtslug.biz/8fYTS", note: "Link 4" }
-];
+<script>
+  const links = [
+    { url: "https://srtslug.biz/8fYS7", note: "Link 1" },
+    { url: "https://srtslug.biz/8fYSt", note: "Link 2" },
+    { url: "https://srtslug.biz/8fYTv", note: "Link 3" },
+    { url: "https://srtslug.biz/8fYTS", note: "Link 4" }
+  ];
 
-    // =================================================
+  const chosenLinkEl = document.getElementById('chosenLink');
+  const noteEl = document.getElementById('note');
+  const openBtn = document.getElementById('openBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const againBtn = document.getElementById('againBtn');
+  const tbody = document.querySelector('#allTable tbody');
 
-    const chosenLinkEl = document.getElementById('chosenLink');
-    const noteEl = document.getElementById('note');
-    const openBtn = document.getElementById('openBtn');
-    const copyBtn = document.getElementById('copyBtn');
-    const againBtn = document.getElementById('againBtn');
-    const tbody = document.querySelector('#allTable tbody');
+  let chosenIndex = null;
 
-    let chosenIndex = null;
+  function escapeHtml(str) {
+    return str.replace(/[&<>'"]/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[c]));
+  }
 
-    // chọn ngẫu nhiên 1 link (khi load hoặc khi bấm Random lại)
-    function pickRandom() {
-      if (links.length === 0) {
-        chosenIndex = null;
-        chosenLinkEl.textContent = 'Không có link trong danh sách';
-        noteEl.textContent = '';
-        openBtn.disabled = true;
-        copyBtn.disabled = true;
-        return;
-      }
-      chosenIndex = Math.floor(Math.random() * links.length);
-      updateView();
+  function pickRandom() {
+    if (links.length === 0) {
+      chosenIndex = null;
+      chosenLinkEl.textContent = 'Không có link trong danh sách';
+      noteEl.textContent = '';
+      openBtn.disabled = true;
+      copyBtn.disabled = true;
+      return;
     }
+    chosenIndex = Math.floor(Math.random() * links.length);
+    updateView();
+  }
 
-    // cập nhật giao diện
-    function updateView() {
-      if (chosenIndex === null) return;
-      const item = links[chosenIndex];
-      chosenLinkEl.innerHTML = `<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.url)}</a>`;
-      noteEl.textContent = item.note || '';
-      openBtn.disabled = false;
-      copyBtn.disabled = false;
-      // highlight trong bảng (nếu đã render)
-      const rows = tbody.querySelectorAll('tr');
-      rows.forEach(r => r.classList.remove('highlight'));
-      const selectedRow = tbody.querySelector(`tr[data-idx="${chosenIndex}"]`);
-      if (selectedRow) {
-        selectedRow.classList.add('highlight');
-        // scroll vào view (nếu user mở details)
-        selectedRow.scrollIntoView({behavior:'smooth', block:'center'});
-      }
+  function updateView() {
+    if (chosenIndex === null) return;
+    const item = links[chosenIndex];
+    chosenLinkEl.innerHTML = `<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.url)}</a>`;
+    noteEl.textContent = item.note || '';
+    openBtn.disabled = false;
+    copyBtn.disabled = false;
+
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach(r => r.classList.remove('highlight'));
+    const selectedRow = tbody.querySelector(`tr[data-idx="${chosenIndex}"]`);
+    if (selectedRow) {
+      selectedRow.classList.add('highlight');
     }
+  }
 
-    // render bảng tất cả link
-    function renderTable() {
-      tbody.innerHTML = '';
-      links.forEach((l, i) => {
-        const tr = document.createElement('tr');
-        tr.dataset.idx = i;
-        const td1
+  function renderTable() {
+    tbody.innerHTML = '';
+    links.forEach((l, i) => {
+      const tr = document.createElement('tr');
+      tr.dataset.idx = i;
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td><a href="${escapeHtml(l.url)}" target="_blank">${escapeHtml(l.url)}</a></td>
+        <td>${l.note || ''}</td>
+        <td><button onclick="window.open('${l.url}','_blank')">Mở</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
 
+  openBtn.onclick = () => { if (chosenIndex!==null) window.open(links[chosenIndex].url, "_blank"); };
+  copyBtn.onclick = () => { if (chosenIndex!==null) navigator.clipboard.writeText(links[chosenIndex].url); };
+  againBtn.onclick = pickRandom;
+
+  // 🚀 gọi khi load
+  renderTable();
+  pickRandom();
+</script>
