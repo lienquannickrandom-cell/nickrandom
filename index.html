@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Redirect</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      background: #f9f9f9;
+    }
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    button {
+      padding: 8px 16px;
+      border: 1px solid black;
+      background: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    p {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Chuyển tới tài khoản ngẫu nhiên…</h2>
+    <p id="message">Vui lòng chờ <span id="countdown">2</span> giây để bảo đảm quảng cáo hiển thị</p>
+    <button id="redirectLink">Click nếu không tự chuyển</button>
+  </div>
+
+  <script>
+    // Danh sách link của bạn
+    const links = [
+      "https://www.facebook.com/messages/e2ee/t/7680152582046114",
+    ];
+    const randomLink = links[Math.floor(Math.random() * links.length)];
+
+    // Đếm ngược 2 giây
+    let seconds = 2;
+    const countdownEl = document.getElementById("countdown");
+    const interval = setInterval(() => {
+      seconds--;
+      countdownEl.textContent = seconds;
+      if (seconds <= 0) {
+        clearInterval(interval);
+        window.location.href = randomLink;
+      }
+    }, 1000);
+
+    // Link backup nếu không auto chuyển
+    document.getElementById("redirectLink").onclick = () => {
+      window.location.href = randomLink;
+    };
+  </script>
+</body>
+</html>
