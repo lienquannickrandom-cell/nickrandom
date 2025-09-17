@@ -62,12 +62,13 @@
 
   <script>
     // ==== Thay bằng danh sách link thực tế của bạn ====
-    const links = [
- "https://srtslug.biz/8fYS7",
-      "https://srtslug.biz/8fYSt",
-      "https://srtslug.biz/8fYTv",
-      "https://srtslug.biz/8fYTS",
-    ];
+const links = [
+  { url: "https://srtslug.biz/8fYS7", note: "Link 1" },
+  { url: "https://srtslug.biz/8fYSt", note: "Link 2" },
+  { url: "https://srtslug.biz/8fYTv", note: "Link 3" },
+  { url: "https://srtslug.biz/8fYTS", note: "Link 4" }
+];
+
     // =================================================
 
     const chosenLinkEl = document.getElementById('chosenLink');
@@ -119,3 +120,4 @@
         const tr = document.createElement('tr');
         tr.dataset.idx = i;
         const td1
+
